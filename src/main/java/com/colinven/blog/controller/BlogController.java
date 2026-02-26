@@ -25,46 +25,38 @@ public class BlogController {
 
     @PostMapping("/blogs")
     public ResponseEntity<BlogResponse> createBlog(@RequestBody BlogRecord blogRecord) {
-        Blog blog = blogService.saveBlog(blogRecord);
-        BlogResponse savedBlog = new BlogResponse(blog);
-
-        return ResponseEntity.created(URI.create("/api/v1/blogs/" + blog.getId())).body(savedBlog);
+        BlogResponse blogResponse = blogService.saveBlog(blogRecord);
+        return ResponseEntity.created(URI.create("/api/v1/blogs/" + blogResponse.id())).body(blogResponse);
     }
 
     @GetMapping("/blogs/{id}")
     public ResponseEntity<BlogResponse> getBlog(@PathVariable("id") Long id) {
-        Blog blog = blogService.getBlog(id);
-        if (blog == null) {
+        BlogResponse blogResponse = blogService.getBlog(id);
+        if (blogResponse == null) {
             return ResponseEntity.notFound().build();
         }
-        BlogResponse blogResponse = new BlogResponse(blog);
         return ResponseEntity.ok(blogResponse);
     }
 
     @GetMapping("/blogs")
     public ResponseEntity<List<BlogResponse>> getAllBlogs() {
-        List<Blog> blogs = blogService.getAllBlogs();
-        List<BlogResponse> blogResponses = new ArrayList<>();
-        for (Blog blog : blogs) {
-            blogResponses.add(new BlogResponse(blog));
-        }
+        List<BlogResponse> blogResponses = blogService.getAllBlogs();
         return ResponseEntity.ok(blogResponses);
     }
 
     @PutMapping("/blogs/{id}")
     public ResponseEntity<BlogResponse> editBlog(@PathVariable("id") Long id, @RequestBody BlogRecord blogRecord) {
-        Blog blog = blogService.editBlog(id, blogRecord);
-        if (blog == null) {
+        BlogResponse blogResponse = blogService.editBlog(id, blogRecord);
+        if (blogResponse == null) {
             return ResponseEntity.notFound().build();
         }
-        BlogResponse updatedBlog = new BlogResponse(blog);
-        return ResponseEntity.ok(updatedBlog);
+        return ResponseEntity.ok(blogResponse);
     }
 
     @DeleteMapping("/blogs/{id}")
     public  ResponseEntity<Void> deleteBlog(@PathVariable("id") Long id) {
-        Blog blog = blogService.deleteBlog(id);
-        if (blog == null) {
+        BlogResponse blogResponse = blogService.deleteBlog(id);
+        if (blogResponse == null) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.noContent().build();

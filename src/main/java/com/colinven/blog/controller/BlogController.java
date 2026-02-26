@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -25,23 +26,35 @@ public class BlogController {
     @PostMapping("/blogs")
     public ResponseEntity<BlogResponse> createBlog(@RequestBody BlogRecord blogRecord) {
         Blog blog = blogService.saveBlog(blogRecord);
-        BlogResponse savedBlog = new BlogResponse(blog.getId(), blog.getTitle(), blog.getContent(), blog.getCategory(), blog.getTags());
+        BlogResponse savedBlog = new BlogResponse(
+                blog.getId(),
+                blog.getTitle(),
+                blog.getContent(),
+                blog.getCategory(),
+                blog.getTags()
+        );
 
         return ResponseEntity.created(URI.create("/api/v1/blogs/" + blog.getId())).body(savedBlog);
     }
 
     @GetMapping("/blogs/{id}")
-    public ResponseEntity<Blog> getBlog(@PathVariable("id") Long id) {
+    public ResponseEntity<BlogResponse> getBlog(@PathVariable("id") Long id) {
         Blog blog = blogService.getBlog(id);
         if (blog == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(blog);
+        BlogResponse blogResponse = new BlogResponse(blog);
+        return ResponseEntity.ok(blogResponse);
     }
 
     @GetMapping("/blogs")
-    public ResponseEntity<List<Blog>> getAllBlogs() {
-        return ResponseEntity.ok(blogService.getAllBlogs());
+    public ResponseEntity<List<BlogResponse>> getAllBlogs() {
+        List<Blog> blogs = blogService.getAllBlogs();
+        List<BlogResponse> blogResponses = new ArrayList<>();
+        for (Blog blog : blogs) {
+            blogResponses.add(new BlogResponse(blog));
+        }
+        return ResponseEntity.ok(blogResponses);
     }
 
     @PutMapping("/blogs/{id}")
@@ -50,10 +63,8 @@ public class BlogController {
         if (blog == null) {
             return ResponseEntity.notFound().build();
         }
-        BlogResponse updatedBlog = new BlogResponse(blog.getId(), blog.getTitle(), blog.getContent(), blog.getCategory(), blog.getTags());
+        BlogResponse updatedBlog = new BlogResponse(blog);
         return ResponseEntity.ok(updatedBlog);
-
-
     }
 
     @DeleteMapping("/blogs/{id}")

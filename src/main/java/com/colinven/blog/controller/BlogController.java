@@ -1,16 +1,12 @@
 package com.colinven.blog.controller;
 
 import com.colinven.blog.dto.BlogResponse;
-import com.colinven.blog.entity.Blog;
 import com.colinven.blog.dto.BlogRecord;
 import com.colinven.blog.service.BlogService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController

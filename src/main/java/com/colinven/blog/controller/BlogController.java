@@ -1,8 +1,10 @@
 package com.colinven.blog.controller;
 
+import com.colinven.blog.dto.BlogResponse;
 import com.colinven.blog.entity.Blog;
 import com.colinven.blog.dto.BlogRecord;
 import com.colinven.blog.service.BlogService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -21,14 +23,11 @@ public class BlogController {
     }
 
     @PostMapping("/blogs")
-    public ResponseEntity<Void> createBlog(@RequestBody BlogRecord blogRecord) {
-        Blog newBlog = blogService.saveBlog(blogRecord);
+    public ResponseEntity<BlogResponse> createBlog(@RequestBody BlogRecord blogRecord) {
+        Blog blog = blogService.saveBlog(blogRecord);
+        BlogResponse savedBlog = new BlogResponse(blog.getId(), blog.getTitle(), blog.getContent(), blog.getCategory(), blog.getTags());
 
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(newBlog.getId())
-                .toUri();
-        return ResponseEntity.created(location).build();
+        return ResponseEntity.created(URI.create("/api/v1/blogs/" + blog.getId())).body(savedBlog);
     }
 
     @GetMapping("/blogs/{id}")
@@ -46,12 +45,15 @@ public class BlogController {
     }
 
     @PutMapping("/blogs/{id}")
-    public ResponseEntity<Blog> editBlog(@PathVariable("id") Long id, @RequestBody BlogRecord blogRecord) {
+    public ResponseEntity<BlogResponse> editBlog(@PathVariable("id") Long id, @RequestBody BlogRecord blogRecord) {
         Blog blog = blogService.editBlog(id, blogRecord);
         if (blog == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(blog);
+        BlogResponse updatedBlog = new BlogResponse(blog.getId(), blog.getTitle(), blog.getContent(), blog.getCategory(), blog.getTags());
+        return ResponseEntity.ok(updatedBlog);
+
+
     }
 
     @DeleteMapping("/blogs/{id}")

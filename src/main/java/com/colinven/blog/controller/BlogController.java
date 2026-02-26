@@ -26,13 +26,7 @@ public class BlogController {
     @PostMapping("/blogs")
     public ResponseEntity<BlogResponse> createBlog(@RequestBody BlogRecord blogRecord) {
         Blog blog = blogService.saveBlog(blogRecord);
-        BlogResponse savedBlog = new BlogResponse(
-                blog.getId(),
-                blog.getTitle(),
-                blog.getContent(),
-                blog.getCategory(),
-                blog.getTags()
-        );
+        BlogResponse savedBlog = new BlogResponse(blog);
 
         return ResponseEntity.created(URI.create("/api/v1/blogs/" + blog.getId())).body(savedBlog);
     }

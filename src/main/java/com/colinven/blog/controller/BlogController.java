@@ -2,6 +2,7 @@ package com.colinven.blog.controller;
 
 import com.colinven.blog.dto.BlogResponse;
 import com.colinven.blog.dto.BlogRecord;
+import com.colinven.blog.exception.ResourceNotFoundException;
 import com.colinven.blog.service.BlogService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +30,7 @@ public class BlogController {
     public ResponseEntity<BlogResponse> getBlog(@PathVariable("id") Long id) {
         BlogResponse blogResponse = blogService.getBlog(id);
         if (blogResponse == null) {
-            return ResponseEntity.notFound().build();
+            throw new ResourceNotFoundException("Blog with id " + id + " not found");
         }
         return ResponseEntity.ok(blogResponse);
     }
@@ -44,7 +45,7 @@ public class BlogController {
     public ResponseEntity<BlogResponse> editBlog(@PathVariable("id") Long id, @RequestBody BlogRecord blogRecord) {
         BlogResponse blogResponse = blogService.editBlog(id, blogRecord);
         if (blogResponse == null) {
-            return ResponseEntity.notFound().build();
+            throw new ResourceNotFoundException("Blog with id " + id + " not found");
         }
         return ResponseEntity.ok(blogResponse);
     }
@@ -53,7 +54,7 @@ public class BlogController {
     public  ResponseEntity<Void> deleteBlog(@PathVariable("id") Long id) {
         BlogResponse blogResponse = blogService.deleteBlog(id);
         if (blogResponse == null) {
-            return ResponseEntity.notFound().build();
+            throw new ResourceNotFoundException("Blog with id " + id + " not found");
         }
         return ResponseEntity.noContent().build();
     }

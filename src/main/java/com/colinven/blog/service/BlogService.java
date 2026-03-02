@@ -32,10 +32,7 @@ public class BlogService {
     }
 
     public BlogResponse getBlog(Long id) {
-        Blog blog = blogRepository.findById(id).orElse(null);
-        if (blog == null) {
-            throw new ResourceNotFoundException("Blog with id " + id + " not found");
-        }
+        Blog blog = blogRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Blog with id " + id + " not found."));
         return new BlogResponse(blog);
     }
 
@@ -50,10 +47,7 @@ public class BlogService {
     }
 
     public BlogResponse editBlog(Long id, BlogRecord blogRecord) {
-        Blog blog = blogRepository.findById(id).orElse(null);
-        if (blog == null) {
-            throw new ResourceNotFoundException("Blog with id " + id + " not found");
-        }
+        Blog blog = blogRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Blog with id " + id + " not found."));
         blog.setTitle(blogRecord.title());
         blog.setContent(blogRecord.content());
         blog.setCategory(blogRecord.category());
@@ -64,10 +58,7 @@ public class BlogService {
     }
 
     public void deleteBlog(Long id) {
-        Blog blog = blogRepository.findById(id).orElse(null);
-        if (blog == null) {
-            throw new ResourceNotFoundException("Blog with id " + id + " not found");
-        }
+        Blog blog = blogRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Blog with id " + id + " not found."));
         blogRepository.delete(blog);
     }
 

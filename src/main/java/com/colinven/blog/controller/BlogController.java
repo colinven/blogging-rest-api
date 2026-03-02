@@ -1,7 +1,7 @@
 package com.colinven.blog.controller;
 
 import com.colinven.blog.dto.BlogResponse;
-import com.colinven.blog.dto.BlogRecord;
+import com.colinven.blog.dto.BlogRequest;
 import com.colinven.blog.service.BlogService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,8 +20,8 @@ public class BlogController {
     }
 
     @PostMapping("/blogs")
-    public ResponseEntity<BlogResponse> createBlog(@RequestBody BlogRecord blogRecord) {
-        BlogResponse blogResponse = blogService.saveBlog(blogRecord);
+    public ResponseEntity<BlogResponse> createBlog(@RequestBody BlogRequest blogRequest) {
+        BlogResponse blogResponse = blogService.saveBlog(blogRequest);
         return ResponseEntity.created(URI.create("/api/v1/blogs/" + blogResponse.id())).body(blogResponse);
     }
 
@@ -38,8 +38,8 @@ public class BlogController {
     }
 
     @PutMapping("/blogs/{id}")
-    public ResponseEntity<BlogResponse> editBlog(@PathVariable("id") Long id, @RequestBody BlogRecord blogRecord) {
-        BlogResponse blogResponse = blogService.editBlog(id, blogRecord);
+    public ResponseEntity<BlogResponse> editBlog(@PathVariable("id") Long id, @RequestBody BlogRequest blogRequest) {
+        BlogResponse blogResponse = blogService.editBlog(id, blogRequest);
         return ResponseEntity.ok(blogResponse);
     }
 

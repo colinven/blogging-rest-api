@@ -2,7 +2,7 @@ package com.colinven.blog.service;
 
 import com.colinven.blog.dto.BlogResponse;
 import com.colinven.blog.entity.Blog;
-import com.colinven.blog.dto.BlogRecord;
+import com.colinven.blog.dto.BlogRequest;
 import com.colinven.blog.exception.ResourceNotFoundException;
 import com.colinven.blog.repository.BlogRepository;
 import org.springframework.stereotype.Service;
@@ -20,12 +20,12 @@ public class BlogService {
         this.blogRepository = blogRepository;
     }
 
-    public BlogResponse saveBlog(BlogRecord blogRecord) {
+    public BlogResponse saveBlog(BlogRequest blogRequest) {
         Blog blog = new Blog(
-                blogRecord.title(),
-                blogRecord.content(),
-                blogRecord.category(),
-                blogRecord.tags()
+                blogRequest.title(),
+                blogRequest.content(),
+                blogRequest.category(),
+                blogRequest.tags()
         );
         blogRepository.save(blog);
         return new BlogResponse(blog);
@@ -46,12 +46,12 @@ public class BlogService {
         return blogResponseList;
     }
 
-    public BlogResponse editBlog(Long id, BlogRecord blogRecord) {
+    public BlogResponse editBlog(Long id, BlogRequest blogRequest) {
         Blog blog = blogRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Blog with id " + id + " not found."));
-        blog.setTitle(blogRecord.title());
-        blog.setContent(blogRecord.content());
-        blog.setCategory(blogRecord.category());
-        blog.setTags(blogRecord.tags());
+        blog.setTitle(blogRequest.title());
+        blog.setContent(blogRequest.content());
+        blog.setCategory(blogRequest.category());
+        blog.setTags(blogRequest.tags());
         blog.setUpdatedAt(LocalDateTime.now());
         blogRepository.save(blog);
         return new BlogResponse(blog);

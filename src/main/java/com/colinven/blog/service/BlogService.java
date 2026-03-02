@@ -3,6 +3,7 @@ package com.colinven.blog.service;
 import com.colinven.blog.dto.BlogResponse;
 import com.colinven.blog.entity.Blog;
 import com.colinven.blog.dto.BlogRecord;
+import com.colinven.blog.exception.ResourceNotFoundException;
 import com.colinven.blog.repository.BlogRepository;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +34,7 @@ public class BlogService {
     public BlogResponse getBlog(Long id) {
         Blog blog = blogRepository.findById(id).orElse(null);
         if (blog == null) {
-            return null;
+            throw new ResourceNotFoundException("Blog with id " + id + " not found");
         }
         return new BlogResponse(blog);
     }
@@ -51,7 +52,7 @@ public class BlogService {
     public BlogResponse editBlog(Long id, BlogRecord blogRecord) {
         Blog blog = blogRepository.findById(id).orElse(null);
         if (blog == null) {
-            return null;
+            throw new ResourceNotFoundException("Blog with id " + id + " not found");
         }
         blog.setTitle(blogRecord.title());
         blog.setContent(blogRecord.content());
@@ -62,13 +63,12 @@ public class BlogService {
         return new BlogResponse(blog);
     }
 
-    public BlogResponse deleteBlog(Long id) {
+    public void deleteBlog(Long id) {
         Blog blog = blogRepository.findById(id).orElse(null);
         if (blog == null) {
-            return null;
+            throw new ResourceNotFoundException("Blog with id " + id + " not found");
         }
         blogRepository.delete(blog);
-        return new BlogResponse(blog);
     }
 
 }
